@@ -4,8 +4,8 @@ import 'package:paylike_dart_request/paylike_dart_request.dart';
 
 // Describes endpoints used
 class PaylikeHosts {
-  String api = 'b.paylike.io';
-  String vault = 'vault.paylike.io';
+  String api = 'https://b.paylike.io';
+  String vault = 'https://vault.paylike.io';
   PaylikeHosts();
   PaylikeHosts.from(this.api, this.vault);
 }
@@ -39,7 +39,8 @@ class PaymentResponse {
 
 // Handles high level requests towards the paylike ecosystem
 class PaylikeClient {
-  String get clientId => 'dart-c-1';
+  String clientId = 'dart-c-1';
+  PaylikeClient(this.clientId);
   Function log = (dynamic o) => print(o);
   PaylikeRequester requester = PaylikeRequester();
   Duration timeout = Duration(seconds: 20);
@@ -69,7 +70,7 @@ class PaylikeClient {
     var opts = RequestOptions.fromClientId(clientId)
         .setData({
           ...payment,
-          hints: hints,
+          'hints': hints,
         })
         .setVersion(1)
         .setTimeout(timeout);
