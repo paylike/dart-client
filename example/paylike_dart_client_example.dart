@@ -24,6 +24,11 @@ void main() {
         'integration': {
           'key': client.clientId,
         },
+        'amount': {
+          'currency': 'EUR',
+          'value': 1000,
+          'exponent': 0,
+        },
         'card': {
           'number': {
             'token': cardNumberToken,
