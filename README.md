@@ -16,28 +16,33 @@ hood.
 dart pub add paylike_dart_client
 ```
 
-```js
-// Node.js (or anywhere without "fetch")
-const fetch = require('node-fetch')
-const server = require('@paylike/client')({fetch})
+```dart
+import 'package:paylike_dart_client/paylike_dart_client.dart';
 
-// For a browser environment, "fetch" is "window.fetch"
-const server = require('@paylike/client')()
+void main() {
+  var client = PaylikeClient('MY_CLIENT_ID');
 
-const token = server.tokenize('pcn', '1000000000000000')
-// → Promise
+  Future<TokenizedResponse> request = client.tokenize(TokenizeTypes.PCN, '1000000000000000');
+  request.then((response) {
+    print('Received token: ' + response.token);
+  }).catchError((e) => print(e));
+}
+
 ```
 
 ## Methods
 
-```js
-.tokenize(type, value[, opts])
-// → Promise<Token>
-```
+```dart
+// client.tokenize(TokenizeTypes.PCN, '...');
+// client.tokenize(TokenizeTypes.PCSC, '...');
+Future<TokenizedResponse> tokenize(TokenizeTypes type, String value)
 
-```js
-.payments.create(payment, hints, challengePath[, opts])
-// → Promise<Token>
+// client.paymentCreate(payment, [], null);
+Future<PaymentResponse> paymenCreate(
+      Map<String, dynamic> payment,
+      List<String> hints,
+      String? challengePath
+)
 ```
 
 ## Error handling

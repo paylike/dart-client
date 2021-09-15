@@ -88,7 +88,6 @@ class PaylikeClient {
   }
 
   // Tokenize is used to acquire tokens from the vault
-  // TODO: ADD OPTS
   Future<TokenizedResponse> tokenize(TokenizeTypes type, String value) async {
     var opts = RequestOptions.fromClientId(clientId)
         .setData({
@@ -103,7 +102,6 @@ class PaylikeClient {
   }
 
   // Payment create calls the capture API
-  // TODO: ADD OPTS
   Future<PaymentResponse> paymenCreate(Map<String, dynamic> payment,
       List<String> hints, String? challengePath) async {
     var subPath = challengePath ?? '/payments';
