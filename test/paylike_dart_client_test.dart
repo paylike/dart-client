@@ -1,5 +1,4 @@
 import 'package:paylike_dart_client/paylike_dart_client.dart';
-import 'package:paylike_dart_request/paylike_dart_request.dart';
 import 'package:test/test.dart';
 
 void main() {

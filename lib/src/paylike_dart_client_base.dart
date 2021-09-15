@@ -69,6 +69,24 @@ class PaylikeClient {
   Duration timeout = Duration(seconds: 20);
   PaylikeHosts hosts = PaylikeHosts();
 
+  // Overrides the used logger
+  PaylikeClient setLog(Function log) {
+    this.log = log;
+    return this;
+  }
+
+  // Overrides the timeout settings
+  PaylikeClient setTimeout(Duration timeout) {
+    this.timeout = timeout;
+    return this;
+  }
+
+  // Overrides hosts
+  PaylikeClient setHosts(PaylikeHosts hosts) {
+    this.hosts = hosts;
+    return this;
+  }
+
   // Tokenize is used to acquire tokens from the vault
   // TODO: ADD OPTS
   Future<TokenizedResponse> tokenize(TokenizeTypes type, String value) async {
@@ -99,7 +117,6 @@ class PaylikeClient {
         .setTimeout(timeout);
     var response = await requester.request(url, opts);
     Map<String, dynamic> body = jsonDecode(await response.getBody());
-    print(body);
     if (body['challenges'] != null &&
         (body['challenges'] as List<dynamic>).isNotEmpty) {
       var fetchChallenge = (body['challenges'] as List<dynamic>)
