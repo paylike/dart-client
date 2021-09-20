@@ -7,7 +7,7 @@ of the API is merely a stub.
 
 High-level client for the API documented at:
 https://github.com/paylike/api-reference. It is using
-[paylike/request](https://www.npmjs.com/package/@paylike/request) under the
+[paylike_dart_request](https://pub.dev/packages/paylike_dart_request) under the
 hood.
 
 ## Examples
@@ -44,6 +44,8 @@ Future<PaymentResponse> paymenCreate(
       String? challengePath
 )
 ```
+
+[More information](https://github.com/paylike/api-reference/blob/main/payments/index.md) on payment data structure.
 
 ## Error handling
 
