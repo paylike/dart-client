@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:mockito/annotations.dart';
@@ -22,21 +23,47 @@ void main() {
     test('Tokenization should be able to provide back a token', () async {
       var mocker = Mocker();
       var client = PaylikeClient('CLIENT_ID').setRequester(mocker.requester);
-      var opts = RequestOptions.fromClientId(client.clientId)
-          .setData({
-            'type': 'pcn',
-            'value': '4100000000000000',
-          })
-          .setVersion(1)
-          .setTimeout(client.timeout);
-
       when(mocker.requester.request(any, any))
           .thenAnswer((realInvocation) async => mocker.response);
-
       when(mocker.response.getBody())
           .thenAnswer((realInvocation) async => '{"token":"foo"}');
       var resp = await client.tokenize(TokenizeTypes.PCN, '4100000000000000');
       expect(resp.token, 'foo');
+    });
+
+    test('Payment creation should do challenges based on fetch type', () async {
+      var mocker = Mocker();
+      var counter = 0;
+      var client = PaylikeClient('CLIENT_ID').setRequester(mocker.requester);
+      var challengeResolvedResponse = MockPaylikeResponse();
+      var finalResolveResponse = MockPaylikeResponse();
+      when(finalResolveResponse.getBody())
+          .thenAnswer((realinvocation) async => '{"authorizationId": "foo"}');
+      when(mocker.requester.request(client.hosts.api + '/payments', any))
+          .thenAnswer((realInvocation) async {
+        if (counter == 0) {
+          counter++;
+          return mocker.response;
+        }
+        var opts = realInvocation.positionalArguments[1] as RequestOptions;
+        expect((opts.data as Map<String, dynamic>)['test'], {});
+        expect((opts.data as Map<String, dynamic>)['hints'], ['hint1']);
+        return finalResolveResponse;
+      });
+      when(mocker.response.getBody())
+          .thenAnswer((realInvocation) async => jsonEncode({
+                'challenges': [
+                  {'name': 'challenge01', 'type': 'fetch', 'path': '/challenge'}
+                ]
+              }));
+      when(mocker.requester.request(client.hosts.api + '/challenge', any))
+          .thenAnswer((realInvocation) async => challengeResolvedResponse);
+      when(challengeResolvedResponse.getBody())
+          .thenAnswer((realInvocation) async => jsonEncode({
+                'hints': ['hint1']
+              }));
+      var resp = await client.paymenCreate({'test': {}}, [], null);
+      expect(resp.transaction.id, 'foo');
     });
   });
 
