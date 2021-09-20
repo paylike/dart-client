@@ -76,7 +76,7 @@ class PaylikeClient {
   }
 
   // Overrides the used logger
-  PaylikeClient setLog(Function log) {
+  PaylikeClient setLog(void Function(dynamic d) log) {
     this.log = log;
     return this;
   }

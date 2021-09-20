@@ -47,29 +47,23 @@ Future<PaymentResponse> paymenCreate(
 
 ## Error handling
 
-The methods may throw any error forwarded from the used fetch implementation as
-well as one of the below error classes. All error classes are exposed on the
-main function.
+The methods may throw any error forwarded from the used PaylikeRequester implementation as
+well as one of the below error classes.
 
-```js
-const server = require('@paylike/client')()
-server.RateLimitError
-```
+- `RateLimitException`
 
-- `RateLimitError`
-
-  May have a `retryAfter` (milliseconds) property if sent by the server
+  May have a `retryAfter` (Duration) property if sent by the server
   specifying the minimum delay.
 
-- `TimeoutError`
+- `TimeoutException`
 
-  Has a `timeout` (milliseconds) property specifying the time waited.
+  Comes from `dart:async` library https://api.dart.dev/be/169657/dart-async/TimeoutException-class.html
 
-- `ServerError`
+- `ServerErrorException`
 
-  Has `status` and `headers` properties copied from the fetch response.
+  Has `status` and `headers` properties copied from the io.HttpClientResponse
 
-- `ResponseError`
+- `PaylikeException`
 
   These errors correspond to
   [status codes](https://github.com/paylike/api-reference/blob/master/status-codes.md)
@@ -79,11 +73,11 @@ server.RateLimitError
 
 ## Logging
 
-Pass a log function of the format `(i) => {}` to catch internal (structured)
+Pass a log function of the format `void Function(dynamic d)` to catch internal (structured)
 logging.
 
-```js
-const server = require('@paylike/client')({log: console.log})
+```dart
+  var client = PaylikeClient('MY_CLIENT_ID').setLog((dynamic d) => print(d))
 ```
 
 ## Timeouts and retries
