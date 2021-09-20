@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="generator" content="made with love by dartdoc 0.45.0">
+  <meta name="description" content="paylike_dart_client API docs, for the Dart programming language.">
+  <title>paylike_dart_client - Dart API docs</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="static-assets/github.css?v1">
+  <link rel="stylesheet" href="static-assets/styles.css?v1">
+  <link rel="icon" href="static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href=""
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="https://paylike.io">paylike_dart_client package</a></li>
+  </ol>
+  <div class="self-name">paylike_dart_client</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      
+<section class="desc markdown">
+  <h1 id="paylike-dart-api-client">Paylike Dart API client</h1>
+<p><em>This is an ALPHA release</em></p>
+<p>Although the functionality included is production quality, the supported scope
+of the API is merely a stub.</p>
+<p>High-level client for the API documented at:
+<a href="https://github.com/paylike/api-reference">https://github.com/paylike/api-reference</a>. It is using
+<a href="https://www.npmjs.com/package/@paylike/request">paylike/request</a> under the
+hood.</p>
+<h2 id="examples">Examples</h2>
+<pre class="language-sh"><code class="language-sh">dart pub add paylike_dart_client
+</code></pre>
+<pre class="language-dart"><code class="language-dart">import 'package:paylike_dart_client/paylike_dart_client.dart';
+
+void main() {
+  var client = PaylikeClient('MY_CLIENT_ID');
+
+  Future&lt;TokenizedResponse&gt; request = client.tokenize(TokenizeTypes.PCN, '1000000000000000');
+  request.then((response) {
+    print('Received token: ' + response.token);
+  }).catchError((e) =&gt; print(e));
+}
+
+</code></pre>
+<h2 id="methods">Methods</h2>
+<pre class="language-dart"><code class="language-dart">// client.tokenize(TokenizeTypes.PCN, '...');
+// client.tokenize(TokenizeTypes.PCSC, '...');
+Future&lt;TokenizedResponse&gt; tokenize(TokenizeTypes type, String value)
+
+// client.paymentCreate(payment, [], null);
+Future&lt;PaymentResponse&gt; paymenCreate(
+      Map&lt;String, dynamic&gt; payment,
+      List&lt;String&gt; hints,
+      String? challengePath
+)
+</code></pre>
+<h2 id="error-handling">Error handling</h2>
+<p>The methods may throw any error forwarded from the used fetch implementation as
+well as one of the below error classes. All error classes are exposed on the
+main function.</p>
+<pre class="language-js"><code class="language-js">const server = require('@paylike/client')()
+server.RateLimitError
+</code></pre>
+<ul>
+<li>
+<p><code>RateLimitError</code></p>
+<p>May have a <code>retryAfter</code> (milliseconds) property if sent by the server
+specifying the minimum delay.</p>
+</li>
+<li>
+<p><code>TimeoutError</code></p>
+<p>Has a <code>timeout</code> (milliseconds) property specifying the time waited.</p>
+</li>
+<li>
+<p><code>ServerError</code></p>
+<p>Has <code>status</code> and <code>headers</code> properties copied from the fetch response.</p>
+</li>
+<li>
+<p><code>ResponseError</code></p>
+<p>These errors correspond to
+<a href="https://github.com/paylike/api-reference/blob/master/status-codes.md">status codes</a>
+from the API reference. They have at least a <code>code</code> and <code>message</code> property,
+but may also have other useful properties relevant to the specific error code,
+such as a minimum and maximum for amounts.</p>
+</li>
+</ul>
+<h2 id="logging">Logging</h2>
+<p>Pass a log function of the format <code>(i) =&gt; {}</code> to catch internal (structured)
+logging.</p>
+<pre class="language-js"><code class="language-js">const server = require('@paylike/client')({log: console.log})
+</code></pre>
+<h2 id="timeouts-and-retries">Timeouts and retries</h2>
+<p>There is a default timeout for all HTTPS requests of 10 seconds and a retry
+strategy of 10 retries with increasing delay (check the source for details). The
+default maximum timeout (retries and timeouts accumulated) is 72,100
+milliseconds.</p>
+<p>Both of these parameters can be customized:</p>
+<pre class="language-js"><code class="language-js">const server = require('@paylike/client')({
+  timeout: 10000,
+  retryAfter: (err, attempts) =&gt; {
+    // err = current error
+    // attempts = total attempts so far
+    return false // no more attempts (err will be returned to the client)
+    // or
+    return 1000 // retry after this many milliseconds
+  },
+})
+</code></pre>
+<p>Both options can be set on the factory or the individual method.</p>
+</section>
+
+
+      <section class="summary">
+          <h2>Libraries</h2>
+        <dl>
+          <dt id="paylike_dart_client">
+  <span class="name"><a href="paylike_dart_client/paylike_dart_client-library.html">paylike_dart_client</a></span> 
+
+</dt>
+<dd>Support for doing something awesome. <a href="paylike_dart_client/paylike_dart_client-library.html">[...]</a>
+</dd>
+
+        </dl>
+      </section>
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="https://paylike.io">paylike_dart_client package</a></li>
+</ol>
+
+
+    <h5 class="hidden-xs"><span class="package-name">paylike_dart_client</span> <span class="package-kind">package</span></h5>
+    <ol>
+      <li class="section-title">Libraries</li>
+      <li><a href="paylike_dart_client/paylike_dart_client-library.html">paylike_dart_client</a></li>
+</ol>
+
+  </div>
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div>
+
+</main>
+
+<footer>
+  <span class="no-break">
+    paylike_dart_client
+      1.0.0
+  </span>
+
+  
+</footer>
+
+
+
+<script src="static-assets/highlight.pack.js?v1"></script>
+<script src="static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
