@@ -5,10 +5,6 @@ void main() {
   group('Essential tests', () {
     final client = PaylikeClient('e393f9ec-b2f7-4f81-b455-ce45b02d355d');
 
-    setUp(() {
-      // Additional setup goes here.
-    });
-
     test('Tokenization should work as expected', () async {
       var response =
           await client.tokenize(TokenizeTypes.PCN, '4100000000000000');
