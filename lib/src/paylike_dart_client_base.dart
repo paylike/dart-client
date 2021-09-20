@@ -69,6 +69,12 @@ class PaylikeClient {
   Duration timeout = Duration(seconds: 20);
   PaylikeHosts hosts = PaylikeHosts();
 
+  // Overrides the used requester
+  PaylikeClient setRequester(PaylikeRequester requester) {
+    this.requester = requester;
+    return this;
+  }
+
   // Overrides the used logger
   PaylikeClient setLog(Function log) {
     this.log = log;

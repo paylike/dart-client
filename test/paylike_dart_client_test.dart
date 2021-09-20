@@ -1,9 +1,46 @@
+import 'dart:io';
+
+import 'package:mockito/annotations.dart';
+import 'package:mockito/mockito.dart';
 import 'package:paylike_dart_client/paylike_dart_client.dart';
+import 'package:paylike_dart_request/paylike_dart_request.dart';
 import 'package:test/test.dart';
 
+import 'paylike_dart_client_test.mocks.dart';
+
+class Mocker {
+  var response = MockPaylikeResponse();
+  var requester = MockPaylikeRequester();
+}
+
+var E2E_TESTING_ENABLED = Platform.environment['E2E_TEST'] == 'true';
+var E2E_CLIENT_KEY = Platform.environment['E2E_CLIENT_KEY'];
+
+@GenerateMocks([PaylikeRequester, PaylikeResponse])
 void main() {
   group('Essential tests', () {
-    final client = PaylikeClient('e393f9ec-b2f7-4f81-b455-ce45b02d355d');
+    test('Tokenization should be able to provide back a token', () async {
+      var mocker = Mocker();
+      var client = PaylikeClient('CLIENT_ID').setRequester(mocker.requester);
+      var opts = RequestOptions.fromClientId(client.clientId)
+          .setData({
+            'type': 'pcn',
+            'value': '4100000000000000',
+          })
+          .setVersion(1)
+          .setTimeout(client.timeout);
+
+      when(mocker.requester.request(client.hosts.vault, opts))
+          .thenAnswer((realInvocation) {
+        return Future.value(mocker.response);
+      });
+    });
+  });
+  group('End to end tests', () {
+    if (E2E_CLIENT_KEY == null || E2E_CLIENT_KEY!.isEmpty) {
+      throw Exception('E2E_CLIENT_KEY is required for E2E tests');
+    }
+    final client = PaylikeClient(E2E_CLIENT_KEY as String);
 
     test('Tokenization should work as expected', () async {
       var response =
@@ -45,5 +82,5 @@ void main() {
       }, [], null);
       expect(response.transaction.id, isNotNull);
     });
-  });
+  }, skip: !E2E_TESTING_ENABLED);
 }
