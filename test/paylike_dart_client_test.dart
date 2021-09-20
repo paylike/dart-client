@@ -30,12 +30,16 @@ void main() {
           .setVersion(1)
           .setTimeout(client.timeout);
 
-      when(mocker.requester.request(client.hosts.vault, opts))
-          .thenAnswer((realInvocation) {
-        return Future.value(mocker.response);
-      });
+      when(mocker.requester.request(any, any))
+          .thenAnswer((realInvocation) async => mocker.response);
+
+      when(mocker.response.getBody())
+          .thenAnswer((realInvocation) async => '{"token":"foo"}');
+      var resp = await client.tokenize(TokenizeTypes.PCN, '4100000000000000');
+      expect(resp.token, 'foo');
     });
   });
+
   group('End to end tests', () {
     if (E2E_CLIENT_KEY == null || E2E_CLIENT_KEY!.isEmpty) {
       throw Exception('E2E_CLIENT_KEY is required for E2E tests');
