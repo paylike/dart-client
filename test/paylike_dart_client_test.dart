@@ -27,7 +27,8 @@ void main() {
           .thenAnswer((realInvocation) async => mocker.response);
       when(mocker.response.getBody())
           .thenAnswer((realInvocation) async => '{"token":"foo"}');
-      var resp = await client.tokenize(TokenizeTypes.PCN, '4100000000000000');
+      var resp =
+          await client.tokenize(TokenizeTypes.PCN, '4100000000000000', null);
       expect(resp.token, 'foo');
     });
 
@@ -75,7 +76,7 @@ void main() {
 
     test('Tokenization should work as expected', () async {
       var response =
-          await client.tokenize(TokenizeTypes.PCN, '4100000000000000');
+          await client.tokenize(TokenizeTypes.PCN, '4100000000000000', null);
       expect(response.token, isNotNull);
     });
 
@@ -84,11 +85,11 @@ void main() {
       String cardCode;
       {
         var response =
-            await client.tokenize(TokenizeTypes.PCN, '4100000000000000');
+            await client.tokenize(TokenizeTypes.PCN, '4100000000000000', null);
         cardNumber = response.token;
       }
       {
-        var response = await client.tokenize(TokenizeTypes.PCSC, '111');
+        var response = await client.tokenize(TokenizeTypes.PCSC, '111', null);
         cardCode = response.token;
       }
       var response = await client.paymenCreate({

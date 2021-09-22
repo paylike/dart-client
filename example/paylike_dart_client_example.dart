@@ -12,11 +12,12 @@ void main() {
     String cardCodeToken;
     {
       var response = await client.tokenize(
-          TokenizeTypes.PCN, '4100000000000000'); // Card number
+          TokenizeTypes.PCN, '4100000000000000', null); // Card number
       cardNumberToken = response.token;
     }
     {
-      var response = await client.tokenize(TokenizeTypes.PCSC, '111'); // CVC
+      var response =
+          await client.tokenize(TokenizeTypes.PCSC, '111', null); // CVC
       cardCodeToken = response.token;
     }
     {

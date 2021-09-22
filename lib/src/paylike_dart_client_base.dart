@@ -2,6 +2,14 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:paylike_dart_request/paylike_dart_request.dart';
 
+// RetryException is used for throwing an exception
+// when retry count is reached
+class RetryException implements Exception {
+  late int attempts;
+  String cause = 'Reached maximum attempts in retrying';
+  RetryException.fromAttempt(this.attempts);
+}
+
 // Describes endpoints used
 class PaylikeHosts {
   String api = 'https://b.paylike.io';
@@ -60,6 +68,54 @@ class PaymentResponse {
         custom = json['custom'];
 }
 
+// RetryHandler describes the interfaces of a retry handler
+abstract class RetryHandler<T> {
+  Future<T> retry(Future<T> Function() executor);
+}
+
+// DefaultRetryHandler is used as the default retry backoff
+// mechanism for handling RateLimitExceptions
+class DefaultRetryHandler<T> implements RetryHandler<T> {
+  int attempts = 0;
+  Duration getRetryAfter(Duration? retryAfter) {
+    var usedDuration = retryAfter ?? Duration(milliseconds: 0);
+    if (retryAfter == null) {
+      switch (attempts) {
+        case 0:
+        case 1:
+          usedDuration = Duration(milliseconds: 0);
+          break;
+        case 2:
+          usedDuration = Duration(milliseconds: 100);
+          break;
+        case 3:
+          usedDuration = Duration(seconds: 2);
+          break;
+        default:
+          usedDuration = Duration(seconds: 10);
+      }
+    }
+    return usedDuration;
+  }
+
+  @override
+  Future<T> retry(Future<T> Function() executor) async {
+    try {
+      var res = await executor();
+      return res;
+    } on RateLimitException catch (e) {
+      attempts++;
+      if (attempts > 10) {
+        rethrow;
+      }
+      await Future.delayed(getRetryAfter(e.retryAfter));
+    } catch (e) {
+      rethrow;
+    }
+    return retry(executor);
+  }
+}
+
 // Handles high level requests towards the paylike ecosystem
 class PaylikeClient {
   String clientId = 'dart-c-1';
@@ -94,7 +150,16 @@ class PaylikeClient {
   }
 
   // Tokenize is used to acquire tokens from the vault
-  Future<TokenizedResponse> tokenize(TokenizeTypes type, String value) async {
+  // with retry mechanism used
+  Future<TokenizedResponse> tokenize(TokenizeTypes type, String value,
+      RetryHandler<TokenizedResponse>? retry) async {
+    var handler = retry ?? DefaultRetryHandler<TokenizedResponse>();
+    return handler.retry(() => tokenizeRequest(type, value));
+  }
+
+  // tokenizeRequest is used to acquire tokens from the vault
+  Future<TokenizedResponse> tokenizeRequest(
+      TokenizeTypes type, String value) async {
     var opts = RequestOptions.fromClientId(clientId)
         .setData({
           'type': type == TokenizeTypes.PCN ? 'pcn' : 'pcsc',
