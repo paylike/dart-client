@@ -116,6 +116,32 @@ class DefaultRetryHandler<T> implements RetryHandler<T> {
   }
 }
 
+// PaylikeRequestBuilder provides a flexible way to add
+// custom retry mechanism into the flow
+class PaylikeRequestBuilder<T> {
+  late Future<T> Function() fn;
+  RetryHandler<T> retryHandler = DefaultRetryHandler<T>();
+  bool retryEnabled = false;
+  PaylikeRequestBuilder(this.fn);
+  // Receives a custom retry implementation and enables retry mechanism
+  PaylikeRequestBuilder<T> withRetry(RetryHandler<T> retryHandler) {
+    this.retryHandler = retryHandler;
+    retryEnabled = true;
+    return this;
+  }
+
+  // Enables default retry - backoff mechanism
+  PaylikeRequestBuilder<T> withDefaultRetry() {
+    retryEnabled = true;
+    return this;
+  }
+
+  // Executes the request
+  Future<T> execute() {
+    return retryEnabled ? retryHandler.retry(fn) : fn();
+  }
+}
+
 // Handles high level requests towards the paylike ecosystem
 class PaylikeClient {
   String clientId = 'dart-c-1';
@@ -151,10 +177,10 @@ class PaylikeClient {
 
   // Tokenize is used to acquire tokens from the vault
   // with retry mechanism used
-  Future<TokenizedResponse> tokenize(TokenizeTypes type, String value,
-      RetryHandler<TokenizedResponse>? retry) async {
-    var handler = retry ?? DefaultRetryHandler<TokenizedResponse>();
-    return handler.retry(() => tokenizeRequest(type, value));
+  PaylikeRequestBuilder<TokenizedResponse> tokenize(
+      TokenizeTypes type, String value) {
+    return PaylikeRequestBuilder<TokenizedResponse>(
+        () => tokenizeRequest(type, value));
   }
 
   // tokenizeRequest is used to acquire tokens from the vault
@@ -173,7 +199,7 @@ class PaylikeClient {
   }
 
   // Payment create calls the capture API
-  Future<PaymentResponse> paymenCreate(Map<String, dynamic> payment,
+  Future<PaymentResponse> paymentCreate(Map<String, dynamic> payment,
       List<String> hints, String? challengePath) async {
     var subPath = challengePath ?? '/payments';
     var url = hosts.api + subPath;
@@ -192,11 +218,11 @@ class PaylikeClient {
           .map((e) => PaymentChallenge.fromJSON(e))
           .where((c) => c.type == 'fetch')
           .first;
-      return paymenCreate(payment, hints, fetchChallenge.path);
+      return paymentCreate(payment, hints, fetchChallenge.path);
     }
     if (body['hints'] != null && (body['hints'] as List<dynamic>).isNotEmpty) {
       var hintsResp = HintsResponse.fromJSON(body);
-      return paymenCreate(payment, [...hints, ...hintsResp.hints], null);
+      return paymentCreate(payment, [...hints, ...hintsResp.hints], null);
     }
     return PaymentResponse.fromJSON(body);
   }

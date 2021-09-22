@@ -27,8 +27,10 @@ void main() {
           .thenAnswer((realInvocation) async => mocker.response);
       when(mocker.response.getBody())
           .thenAnswer((realInvocation) async => '{"token":"foo"}');
-      var resp =
-          await client.tokenize(TokenizeTypes.PCN, '4100000000000000', null);
+      var request = client
+          .tokenize(TokenizeTypes.PCN, '4100000000000000')
+          .withDefaultRetry();
+      var resp = await request.execute();
       expect(resp.token, 'foo');
     });
 
@@ -63,7 +65,7 @@ void main() {
           .thenAnswer((realInvocation) async => jsonEncode({
                 'hints': ['hint1']
               }));
-      var resp = await client.paymenCreate({'test': {}}, [], null);
+      var resp = await client.paymentCreate({'test': {}}, [], null);
       expect(resp.transaction.id, 'foo');
     });
   });
@@ -75,8 +77,10 @@ void main() {
     final client = PaylikeClient(E2E_CLIENT_KEY as String);
 
     test('Tokenization should work as expected', () async {
-      var response =
-          await client.tokenize(TokenizeTypes.PCN, '4100000000000000', null);
+      var request = client
+          .tokenize(TokenizeTypes.PCN, '4100000000000000')
+          .withDefaultRetry();
+      var response = await request.execute();
       expect(response.token, isNotNull);
     });
 
@@ -84,15 +88,19 @@ void main() {
       String cardNumber;
       String cardCode;
       {
-        var response =
-            await client.tokenize(TokenizeTypes.PCN, '4100000000000000', null);
+        var request = client
+            .tokenize(TokenizeTypes.PCN, '4100000000000000')
+            .withDefaultRetry();
+        var response = await request.execute();
         cardNumber = response.token;
       }
       {
-        var response = await client.tokenize(TokenizeTypes.PCSC, '111', null);
+        var request =
+            client.tokenize(TokenizeTypes.PCSC, '111').withDefaultRetry();
+        var response = await request.execute();
         cardCode = response.token;
       }
-      var response = await client.paymenCreate({
+      var response = await client.paymentCreate({
         'test': {},
         'integration': {
           'key': client.clientId,

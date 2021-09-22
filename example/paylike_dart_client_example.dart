@@ -11,17 +11,21 @@ void main() {
     String cardNumberToken;
     String cardCodeToken;
     {
-      var response = await client.tokenize(
-          TokenizeTypes.PCN, '4100000000000000', null); // Card number
+      var request = client
+          .tokenize(TokenizeTypes.PCN, '4100000000000000') // Card Number
+          .withDefaultRetry();
+      var response = await request.execute();
       cardNumberToken = response.token;
     }
     {
-      var response =
-          await client.tokenize(TokenizeTypes.PCSC, '111', null); // CVC
+      var request = client
+          .tokenize(TokenizeTypes.PCSC, '111') // Card Number
+          .withDefaultRetry();
+      var response = await request.execute(); // CVC
       cardCodeToken = response.token;
     }
     {
-      var response = await client.paymenCreate({
+      var response = await client.paymentCreate({
         'integration': {
           'key': client.clientId,
         },
