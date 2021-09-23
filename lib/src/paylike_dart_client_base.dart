@@ -180,12 +180,11 @@ class PaylikeClient {
   PaylikeRequestBuilder<TokenizedResponse> tokenize(
       TokenizeTypes type, String value) {
     return PaylikeRequestBuilder<TokenizedResponse>(
-        () => tokenizeRequest(type, value));
+        () => _tokenize(type, value));
   }
 
   // tokenizeRequest is used to acquire tokens from the vault
-  Future<TokenizedResponse> tokenizeRequest(
-      TokenizeTypes type, String value) async {
+  Future<TokenizedResponse> _tokenize(TokenizeTypes type, String value) async {
     var opts = RequestOptions.fromClientId(clientId)
         .setData({
           'type': type == TokenizeTypes.PCN ? 'pcn' : 'pcsc',
