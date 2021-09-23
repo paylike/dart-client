@@ -199,7 +199,12 @@ class PaylikeClient {
   }
 
   // Payment create calls the capture API
-  Future<PaymentResponse> paymentCreate(Map<String, dynamic> payment,
+  PaylikeRequestBuilder<PaymentResponse> paymentCreate(
+      Map<String, dynamic> payment) {
+    return PaylikeRequestBuilder(() => _paymentCreate(payment, [], null));
+  }
+
+  Future<PaymentResponse> _paymentCreate(Map<String, dynamic> payment,
       List<String> hints, String? challengePath) async {
     var subPath = challengePath ?? '/payments';
     var url = hosts.api + subPath;
@@ -218,11 +223,11 @@ class PaylikeClient {
           .map((e) => PaymentChallenge.fromJSON(e))
           .where((c) => c.type == 'fetch')
           .first;
-      return paymentCreate(payment, hints, fetchChallenge.path);
+      return _paymentCreate(payment, hints, fetchChallenge.path);
     }
     if (body['hints'] != null && (body['hints'] as List<dynamic>).isNotEmpty) {
       var hintsResp = HintsResponse.fromJSON(body);
-      return paymentCreate(payment, [...hints, ...hintsResp.hints], null);
+      return _paymentCreate(payment, [...hints, ...hintsResp.hints], null);
     }
     return PaymentResponse.fromJSON(body);
   }

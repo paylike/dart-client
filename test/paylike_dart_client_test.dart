@@ -65,7 +65,8 @@ void main() {
           .thenAnswer((realInvocation) async => jsonEncode({
                 'hints': ['hint1']
               }));
-      var resp = await client.paymentCreate({'test': {}}, [], null);
+      var resp =
+          await client.paymentCreate({'test': {}}).withDefaultRetry().execute();
       expect(resp.transaction.id, 'foo');
     });
   });
@@ -100,26 +101,29 @@ void main() {
         var response = await request.execute();
         cardCode = response.token;
       }
-      var response = await client.paymentCreate({
-        'test': {},
-        'integration': {
-          'key': client.clientId,
-        },
-        'amount': {
-          'currency': 'EUR',
-          'value': 1000,
-          'exponent': 0,
-        },
-        'card': {
-          'number': {
-            'token': cardNumber,
-          },
-          'code': {
-            'token': cardCode,
-          },
-          'expiry': {'month': 12, 'year': 2022},
-        },
-      }, [], null);
+      var response = await client
+          .paymentCreate({
+            'test': {},
+            'integration': {
+              'key': client.clientId,
+            },
+            'amount': {
+              'currency': 'EUR',
+              'value': 1000,
+              'exponent': 0,
+            },
+            'card': {
+              'number': {
+                'token': cardNumber,
+              },
+              'code': {
+                'token': cardCode,
+              },
+              'expiry': {'month': 12, 'year': 2022},
+            },
+          })
+          .withDefaultRetry()
+          .execute();
       expect(response.transaction.id, isNotNull);
     });
   }, skip: !E2E_TESTING_ENABLED);

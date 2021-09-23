@@ -25,7 +25,7 @@ void main() {
       cardCodeToken = response.token;
     }
     {
-      var response = await client.paymentCreate({
+      var payment = {
         'integration': {
           'key': client.clientId,
         },
@@ -43,7 +43,9 @@ void main() {
           },
           'expiry': {'month': 12, 'year': 2022},
         },
-      }, [], null);
+      };
+      var request = client.paymentCreate(payment).withDefaultRetry();
+      var response = await request.execute();
       print('Acquried transaction reference: ' + response.transaction.id);
       // ... Store transaction ID
     }
