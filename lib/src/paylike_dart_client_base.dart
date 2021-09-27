@@ -198,11 +198,13 @@ class PaylikeClient {
   }
 
   // Payment create calls the capture API
+  // with retry mechanism used
   PaylikeRequestBuilder<PaymentResponse> paymentCreate(
       Map<String, dynamic> payment) {
     return PaylikeRequestBuilder(() => _paymentCreate(payment, [], null));
   }
 
+  // Payment create calls the capture API
   Future<PaymentResponse> _paymentCreate(Map<String, dynamic> payment,
       List<String> hints, String? challengePath) async {
     var subPath = challengePath ?? '/payments';

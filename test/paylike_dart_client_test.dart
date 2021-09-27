@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -68,6 +69,35 @@ void main() {
       var resp =
           await client.paymentCreate({'test': {}}).withDefaultRetry().execute();
       expect(resp.transaction.id, 'foo');
+    });
+
+    test('Default retry mechanism should work as expected with tokenize',
+        () async {
+      var retryHandler = DefaultRetryHandler<TokenizedResponse>();
+      try {
+        await retryHandler.retry(() async {
+          throw RateLimitException.withTime('200');
+        });
+        fail('Should not be able to reach this');
+      } catch (e) {
+        expect(retryHandler.attempts, 11);
+        expect(e is RateLimitException, true);
+      }
+      retryHandler = DefaultRetryHandler<TokenizedResponse>();
+      try {
+        var count = 0;
+        var resp = await retryHandler.retry(() async {
+          count++;
+          if (count == 11) {
+            return TokenizedResponse.fromJSON({'token': 'foo'});
+          }
+          throw RateLimitException.withTime('200');
+        });
+        expect(retryHandler.attempts, 10);
+        expect(resp.token, 'foo');
+      } catch (e) {
+        fail('Should not be able to reach this');
+      }
     });
   });
 
