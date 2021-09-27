@@ -22,8 +22,8 @@ import 'package:paylike_dart_client/paylike_dart_client.dart';
 void main() {
   var client = PaylikeClient('MY_CLIENT_ID');
 
-  Future<TokenizedResponse> request = client.tokenize(TokenizeTypes.PCN, '1000000000000000');
-  request.then((response) {
+  PaylikeRequestBuilder<TokenizedResponse> request = client.tokenize(TokenizeTypes.PCN, '1000000000000000');
+  request.execute().then((response) {
     print('Received token: ' + response.token);
   }).catchError((e) => print(e));
 }
@@ -35,14 +35,10 @@ void main() {
 ```dart
 // client.tokenize(TokenizeTypes.PCN, '...');
 // client.tokenize(TokenizeTypes.PCSC, '...');
-Future<TokenizedResponse> tokenize(TokenizeTypes type, String value)
+PaylikeRequestBuilder<TokenizedResponse> tokenize(TokenizeTypes type, String value)
 
-// client.paymentCreate(payment, [], null);
-Future<PaymentResponse> paymenCreate(
-      Map<String, dynamic> payment,
-      List<String> hints,
-      String? challengePath
-)
+// client.paymentCreate(payment);
+PaylikeRequestBuilder<PaymentResponse> paymenCreate(Map<String, dynamic> payment)
 ```
 
 [More information](https://github.com/paylike/api-reference/blob/main/payments/index.md) on payment data structure.
@@ -85,23 +81,56 @@ logging.
 ## Timeouts and retries
 
 There is a default timeout for all HTTPS requests of 10 seconds and a retry
-strategy of 10 retries with increasing delay (check the source for details). The
-default maximum timeout (retries and timeouts accumulated) is 72,100
-milliseconds.
-
-Both of these parameters can be customized:
-
-```js
-const server = require('@paylike/client')({
-  timeout: 10000,
-  retryAfter: (err, attempts) => {
-    // err = current error
-    // attempts = total attempts so far
-    return false // no more attempts (err will be returned to the client)
-    // or
-    return 1000 // retry after this many milliseconds
-  },
-})
+strategy of 10 retries with increasing delay. 
+```dart
+      switch (attempts) {
+        case 0:
+        case 1:
+          usedDuration = Duration(milliseconds: 0);
+          break;
+        case 2:
+          usedDuration = Duration(milliseconds: 100);
+          break;
+        case 3:
+          usedDuration = Duration(seconds: 2);
+          break;
+        default:
+          usedDuration = Duration(seconds: 10);
+      }
 ```
 
-Both options can be set on the factory or the individual method.
+Using the default retry handler is recommended which you can do by specifying on the `PaylikeRequestBuilder` you receive:
+```dart
+      var request = client
+          .tokenize(TokenizeTypes.PCN, '4100000000000000')
+          .withDefaultRetry();
+      var response = await request.execute();
+```
+You can also create your own handler by implementing the RetryHandler abstract class:
+```dart
+class CustomRetryHandler<T> implements RetryHandler<T> {
+  int attempts = 0;
+  @override
+  Future<T> retry(Future<T> Function() executor) async {
+    try {
+      var res = await executor();
+      return res;
+    } on RateLimitException catch (e) {
+      attempts++;
+      if (attempts > 10) {
+        rethrow;
+      }
+      await Future.delayed(Duration(seconds: 5));
+    } catch (e) {
+      rethrow;
+    }
+    return retry(executor);
+  }
+}
+
+// Then you can apply your own retry handler to the request builder:
+var request = client
+      .tokenize(TokenizeTypes.PCN, '4100000000000000')
+      .withRetry(CustomRetryHandler<TokenizedResponse>());
+var response = await request.execute();
+```
