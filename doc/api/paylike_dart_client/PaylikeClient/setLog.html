@@ -53,7 +53,9 @@
       
 
 <span class="returntype"><a href="../../paylike_dart_client/PaylikeClient-class.html">PaylikeClient</a></span>
-<span class="name ">setLog</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="setLog-param-log"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Function-class.html">Function</a></span> <span class="parameter-name">log</span></span></li>
+<span class="name ">setLog</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="setLog-param-log"><span class="type-annotation">void</span> <span class="parameter-name">log</span>(<ol class="parameter-list"><li><span class="parameter" id="param-d"><span class="type-annotation">dynamic</span> <span class="parameter-name">d</span></span></li>
+</ol>
+)</span></li>
 </ol>)
 
       
@@ -65,7 +67,7 @@
     
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">PaylikeClient setLog(Function log) {
+  <pre class="language-dart"><code class="language-dart">PaylikeClient setLog(void Function(dynamic d) log) {
   this.log = log;
   return this;
 }</code></pre>
@@ -109,9 +111,10 @@
 
     <li class="section-title"><a href="../../paylike_dart_client/PaylikeClient-class.html#instance-methods">Methods</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
-    <li><a href="../../paylike_dart_client/PaylikeClient/paymenCreate.html">paymenCreate</a></li>
+    <li><a href="../../paylike_dart_client/PaylikeClient/paymentCreate.html">paymentCreate</a></li>
     <li><a href="../../paylike_dart_client/PaylikeClient/setHosts.html">setHosts</a></li>
     <li><a href="../../paylike_dart_client/PaylikeClient/setLog.html">setLog</a></li>
+    <li><a href="../../paylike_dart_client/PaylikeClient/setRequester.html">setRequester</a></li>
     <li><a href="../../paylike_dart_client/PaylikeClient/setTimeout.html">setTimeout</a></li>
     <li><a href="../../paylike_dart_client/PaylikeClient/tokenize.html">tokenize</a></li>
     <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
