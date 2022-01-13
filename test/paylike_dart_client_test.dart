@@ -67,7 +67,9 @@ void main() {
               }));
       var resp =
           await client.paymentCreate({'test': {}}).withDefaultRetry().execute();
-      expect(resp.transaction.id, 'foo');
+      expect(resp.paymentResponse, isNotNull);
+      expect(resp.isHTML, false);
+      expect(resp.paymentResponse?.transaction.id, 'foo');
     });
 
     test('Default retry mechanism should work as expected with tokenize',
@@ -153,7 +155,10 @@ void main() {
           })
           .withDefaultRetry()
           .execute();
-      expect(response.transaction.id, isNotNull);
+      expect(response.isHTML, true);
+      expect(response.HTMLBody, isNotNull);
+      expect(response.hints, isNotEmpty);
+      expect(response.paymentResponse, isNull);
     });
   }, skip: !E2E_TESTING_ENABLED);
 }

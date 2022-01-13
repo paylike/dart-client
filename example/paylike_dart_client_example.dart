@@ -46,8 +46,17 @@ void main() {
       };
       var request = client.paymentCreate(payment).withDefaultRetry();
       var response = await request.execute();
-      print('Acquried transaction reference: ' + response.transaction.id);
-      // ... Store transaction ID
+      // If the response is HTML, then you encountered a payment challenge
+      // like TDS
+      if (response.isHTML) {
+        var htmlBody = response.getHTMLBody();
+        var collectedHints = response.hints;
+        // ... Handle TDS
+      } else {
+        var paymentResp = response.getPaymentResponse();
+        print('Acquried transaction reference: ' + paymentResp.transaction.id);
+        // ... Store transaction ID
+      }
     }
   }()
       .then((_) => print('payment created'))

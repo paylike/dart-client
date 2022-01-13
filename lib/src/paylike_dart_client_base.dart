@@ -70,6 +70,36 @@ class PaymentResponse {
         custom = json['custom'];
 }
 
+// Describes the client response from the Paylike capture API
+class PaylikeClientResponse {
+  final bool isHTML;
+  PaymentResponse? paymentResponse;
+  List<String> hints;
+  String? HTMLBody;
+  PaylikeClientResponse({
+    required this.isHTML,
+    this.paymentResponse,
+    this.HTMLBody,
+    this.hints = const [],
+  });
+
+  // Null check for PaymentResponse
+  PaymentResponse getPaymentResponse() {
+    if (paymentResponse == null) {
+      throw Exception('Payment response is null, cannot be acquired');
+    }
+    return paymentResponse as PaymentResponse;
+  }
+
+  // Null check for HTMLBody
+  String getHTMLBody() {
+    if (HTMLBody == null) {
+      throw Exception('HTMLBody is null, cannot be acquired');
+    }
+    return HTMLBody as String;
+  }
+}
+
 // RetryHandler describes the interfaces of a retry handler.
 abstract class RetryHandler<T> {
   // Retry is the function that should be implemented by every retry handler.
@@ -206,13 +236,13 @@ class PaylikeClient {
 
   // Payment create calls the capture API
   // with retry mechanism used.
-  PaylikeRequestBuilder<PaymentResponse> paymentCreate(
+  PaylikeRequestBuilder<PaylikeClientResponse> paymentCreate(
       Map<String, dynamic> payment) {
     return PaylikeRequestBuilder(() => _paymentCreate(payment, [], null));
   }
 
   // Payment create calls the capture API.
-  Future<PaymentResponse> _paymentCreate(Map<String, dynamic> payment,
+  Future<PaylikeClientResponse> _paymentCreate(Map<String, dynamic> payment,
       List<String> hints, String? challengePath) async {
     var subPath = challengePath ?? '/payments';
     var url = hosts.api + subPath;
@@ -227,16 +257,41 @@ class PaylikeClient {
     Map<String, dynamic> body = jsonDecode(await response.getBody());
     if (body['challenges'] != null &&
         (body['challenges'] as List<dynamic>).isNotEmpty) {
-      var fetchChallenge = (body['challenges'] as List<dynamic>)
-          .map((e) => PaymentChallenge.fromJSON(e))
-          .where((c) => c.type == 'fetch')
-          .first;
-      return _paymentCreate(payment, hints, fetchChallenge.path);
+      var remainingChallenges = (body['challenges'] as List<dynamic>)
+          .map((e) => PaymentChallenge.fromJSON(e));
+      var fetchChallenges = remainingChallenges.where((c) => c.type == 'fetch');
+      if (fetchChallenges.isNotEmpty) {
+        return _paymentCreate(payment, hints, fetchChallenges.first.path);
+      }
+      var tdsChallenges = remainingChallenges.where(
+          (c) => c.type == 'background-iframe' && c.name == 'tds-fingerprint');
+      if (tdsChallenges.isNotEmpty) {
+        return _paymentCreate(payment, hints, tdsChallenges.first.path);
+      }
+      return _paymentCreate(payment, hints, remainingChallenges.first.path);
+    }
+    // IFRAME
+    if (body['action'] != null && body['fields'] != null) {
+      var refreshedHints = hints;
+      if (body['hints'] != null) {
+        refreshedHints = [...HintsResponse.fromJSON(body).hints, ...hints];
+      }
+      var formResp = await requester.request(
+          Uri.parse(body['action']).toString(),
+          RequestOptions(
+              form: true,
+              formFields: (body['fields'] as Map<String, dynamic>)
+                  .map((key, value) => MapEntry(key, value.toString()))));
+      return PaylikeClientResponse(
+          isHTML: true,
+          HTMLBody: await formResp.getBody(),
+          hints: refreshedHints);
     }
     if (body['hints'] != null && (body['hints'] as List<dynamic>).isNotEmpty) {
       var hintsResp = HintsResponse.fromJSON(body);
       return _paymentCreate(payment, [...hints, ...hintsResp.hints], null);
     }
-    return PaymentResponse.fromJSON(body);
+    return PaylikeClientResponse(
+        isHTML: false, paymentResponse: PaymentResponse.fromJSON(body));
   }
 }
