@@ -35,10 +35,13 @@ void main() {
 ```dart
 // client.tokenize(TokenizeTypes.PCN, '...');
 // client.tokenize(TokenizeTypes.PCSC, '...');
-PaylikeRequestBuilder<TokenizedResponse> tokenize(TokenizeTypes type, String value)
+PaylikeRequestBuilder<TokenizedResponse> tokenize(TokenizeTypes type, String value);
 
 // client.paymentCreate(payment);
-PaylikeRequestBuilder<PaymentResponse> paymenCreate(Map<String, dynamic> payment)
+PaylikeRequestBuilder<PaymentResponse> paymenCreate({
+  required Map<String, dynamic> payment,
+  List<String> hints = const [],
+});
 ```
 
 [More information](https://github.com/paylike/api-reference/blob/main/payments/index.md) on payment data structure.

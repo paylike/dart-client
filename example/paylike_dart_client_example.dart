@@ -44,7 +44,7 @@ void main() {
           'expiry': {'month': 12, 'year': 2022},
         },
       };
-      var request = client.paymentCreate(payment).withDefaultRetry();
+      var request = client.paymentCreate(payment: payment).withDefaultRetry();
       var response = await request.execute();
       // If the response is HTML, then you encountered a payment challenge
       // like TDS
@@ -52,6 +52,10 @@ void main() {
         var htmlBody = response.getHTMLBody();
         var collectedHints = response.hints;
         // ... Handle TDS
+        request = client
+            .paymentCreate(payment: payment, hints: collectedHints)
+            .withDefaultRetry();
+        // Contineu after auth
       } else {
         var paymentResp = response.getPaymentResponse();
         print('Acquried transaction reference: ' + paymentResp.transaction.id);

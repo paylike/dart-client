@@ -65,8 +65,10 @@ void main() {
           .thenAnswer((realInvocation) async => jsonEncode({
                 'hints': ['hint1']
               }));
-      var resp =
-          await client.paymentCreate({'test': {}}).withDefaultRetry().execute();
+      var resp = await client
+          .paymentCreate(payment: {'test': {}})
+          .withDefaultRetry()
+          .execute();
       expect(resp.paymentResponse, isNotNull);
       expect(resp.isHTML, false);
       expect(resp.paymentResponse?.transaction.id, 'foo');
@@ -133,7 +135,7 @@ void main() {
         cardCode = response.token;
       }
       var response = await client
-          .paymentCreate({
+          .paymentCreate(payment: {
             'test': {},
             'integration': {
               'key': client.clientId,
