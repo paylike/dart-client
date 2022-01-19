@@ -146,10 +146,16 @@ class DefaultRetryHandler<T> implements RetryHandler<T> {
         rethrow;
       }
       await Future.delayed(getRetryAfter(e.retryAfter));
+      return retry(executor);
+    } on TimeoutException catch (e) {
+      attempts++;
+      if (attempts > 2) {
+        rethrow;
+      }
+      return retry(executor);
     } catch (e) {
       rethrow;
     }
-    return retry(executor);
   }
 }
 
@@ -183,7 +189,9 @@ class PaylikeRequestBuilder<T> {
 class PaylikeClient {
   String clientId = 'dart-c-1';
   PaylikeClient(this.clientId);
-  Function log = (dynamic o) => print(o);
+  Function log = (dynamic o) => print('''
+  ${jsonEncode(o)}
+  ''');
   PaylikeRequester requester = PaylikeRequester();
   Duration timeout = Duration(seconds: 20);
   PaylikeHosts hosts = PaylikeHosts();
@@ -257,6 +265,10 @@ class PaylikeClient {
         .setTimeout(timeout);
     var response = await requester.request(url, opts);
     Map<String, dynamic> body = jsonDecode(await response.getBody());
+    log({
+      't': 'response-body',
+      'data': body,
+    });
     if (body['challenges'] != null &&
         (body['challenges'] as List<dynamic>).isNotEmpty) {
       var remainingChallenges = (body['challenges'] as List<dynamic>)
@@ -276,7 +288,8 @@ class PaylikeClient {
     if (body['action'] != null && body['fields'] != null) {
       var refreshedHints = hints;
       if (body['hints'] != null) {
-        refreshedHints = [...HintsResponse.fromJSON(body).hints, ...hints];
+        refreshedHints =
+            <String>{...hints, ...HintsResponse.fromJSON(body).hints}.toList();
       }
       var formResp = await requester.request(
           Uri.parse(body['action']).toString(),
@@ -291,7 +304,8 @@ class PaylikeClient {
     }
     if (body['hints'] != null && (body['hints'] as List<dynamic>).isNotEmpty) {
       var hintsResp = HintsResponse.fromJSON(body);
-      return _paymentCreate(payment, [...hints, ...hintsResp.hints], null);
+      return _paymentCreate(
+          payment, <String>{...hints, ...hintsResp.hints}.toList(), null);
     }
     return PaylikeClientResponse(
         isHTML: false, paymentResponse: PaymentResponse.fromJSON(body));
