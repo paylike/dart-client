@@ -1,7 +1,7 @@
 import 'package:paylike_dart_client/paylike_dart_client.dart';
 
 void main() {
-  var client = PaylikeClient('MY_CLIENT_ID')
+  var client = PaylikeClient()
       .setHosts(
           PaylikeHosts.from('https://b.paylike.io', 'https://vault.paylike.io'))
       .setLog((dynamic a) => print(a))
@@ -27,7 +27,7 @@ void main() {
     {
       var payment = {
         'integration': {
-          'key': client.clientId,
+          'key': 'MERCHANT_CLIENT_ID',
         },
         'amount': {
           'currency': 'EUR',

@@ -22,7 +22,7 @@ void main() {
   group('Essential tests', () {
     test('Tokenization should be able to provide back a token', () async {
       var mocker = Mocker();
-      var client = PaylikeClient('CLIENT_ID').setRequester(mocker.requester);
+      var client = PaylikeClient().setRequester(mocker.requester);
       when(mocker.requester.request(any, any))
           .thenAnswer((realInvocation) async => mocker.response);
       when(mocker.response.getBody())
@@ -37,7 +37,7 @@ void main() {
     test('Payment creation should do challenges based on fetch type', () async {
       var mocker = Mocker();
       var counter = 0;
-      var client = PaylikeClient('CLIENT_ID').setRequester(mocker.requester);
+      var client = PaylikeClient().setRequester(mocker.requester);
       var challengeResolvedResponse = MockPaylikeResponse();
       var finalResolveResponse = MockPaylikeResponse();
       when(finalResolveResponse.getBody())
@@ -108,7 +108,7 @@ void main() {
     if (E2E_CLIENT_KEY == null || E2E_CLIENT_KEY!.isEmpty) {
       throw Exception('E2E_CLIENT_KEY is required for E2E tests');
     }
-    final client = PaylikeClient(E2E_CLIENT_KEY as String);
+    final client = PaylikeClient();
 
     test('Tokenization should work as expected', () async {
       var request = client
@@ -138,7 +138,7 @@ void main() {
           .paymentCreate(payment: {
             'test': {},
             'integration': {
-              'key': client.clientId,
+              'key': E2E_CLIENT_KEY as String,
             },
             'amount': {
               'currency': 'EUR',

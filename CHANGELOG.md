@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Fixed an issue with default constructor not allowing empty client ID
+
 ## 1.0.4
 
 - Fixed an issue with x-client header not being complient to the rest of the Paylike ecosystem

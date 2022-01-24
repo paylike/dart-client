@@ -200,7 +200,8 @@ class PaylikeClient {
   }
 
   String clientId = _generateClientID();
-  PaylikeClient(this.clientId);
+  PaylikeClient.withSpecificClientId(this.clientId);
+  PaylikeClient();
   Function log = (dynamic o) => print('''
   ${jsonEncode(o)}
   ''');
