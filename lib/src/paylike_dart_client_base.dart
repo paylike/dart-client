@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:math';
 import 'package:paylike_dart_request/paylike_dart_request.dart';
 
 // RetryException is used for throwing an exception
@@ -187,7 +188,18 @@ class PaylikeRequestBuilder<T> {
 
 // Handles high level requests towards the paylike ecosystem.
 class PaylikeClient {
-  String clientId = 'dart-c-1';
+  // Generates a new client ID
+  static String _generateClientID() {
+    const _chars =
+        'AaBbCcDdEeFfGgHhIiJjKkLlMmNnOoPpQqRrSsTtUuVvWwXxYyZz1234567890';
+    var _rnd = Random();
+    String getRandomString(int length) =>
+        String.fromCharCodes(Iterable.generate(
+            length, (_) => _chars.codeUnitAt(_rnd.nextInt(_chars.length))));
+    return 'dart-1-${getRandomString(6)}';
+  }
+
+  String clientId = _generateClientID();
   PaylikeClient(this.clientId);
   Function log = (dynamic o) => print('''
   ${jsonEncode(o)}

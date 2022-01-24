@@ -1,3 +1,7 @@
+## 1.0.4
+
+- Fixed an issue with x-client header not being complient to the rest of the Paylike ecosystem
+
 ## 1.0.3
 
 - Added response logging
