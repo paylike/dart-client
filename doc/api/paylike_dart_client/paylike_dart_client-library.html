@@ -50,8 +50,8 @@
 
     
 <section class="desc markdown">
-  <p>Support for doing something awesome.</p>
-<p>More dartdocs go here.</p>
+  <p>Responsible for handling high level communication towards
+the paylike API</p>
 </section>
 
 
@@ -64,7 +64,8 @@
 
 </dt>
 <dd>
-   
+  DefaultRetryHandler is used as the default retry backoff
+mechanism for handling RateLimitExceptions. 
 </dd>
 
         <dt id="HintsResponse">
@@ -72,7 +73,7 @@
 
 </dt>
 <dd>
-   
+  Describes the hints array received after executing a challenge successfully. 
 </dd>
 
         <dt id="PaylikeClient">
@@ -80,7 +81,15 @@
 
 </dt>
 <dd>
-   
+  Handles high level requests towards the paylike ecosystem 
+</dd>
+
+        <dt id="PaylikeClientResponse">
+  <span class="name "><a href="../paylike_dart_client/PaylikeClientResponse-class.html">PaylikeClientResponse</a></span> 
+
+</dt>
+<dd>
+  Describes the client response from the Paylike capture API 
 </dd>
 
         <dt id="PaylikeHosts">
@@ -88,7 +97,7 @@
 
 </dt>
 <dd>
-   
+  Describes endpoints used. 
 </dd>
 
         <dt id="PaylikeRequestBuilder">
@@ -96,7 +105,8 @@
 
 </dt>
 <dd>
-   
+  PaylikeRequestBuilder provides a flexible way to add
+custom retry mechanism into the flow. 
 </dd>
 
         <dt id="PaylikeTransaction">
@@ -104,7 +114,7 @@
 
 </dt>
 <dd>
-   
+  Describes a paylike transaction. 
 </dd>
 
         <dt id="PaymentChallenge">
@@ -112,7 +122,8 @@
 
 </dt>
 <dd>
-   
+  PaymentChallenge describes a challenge after a payment creation
+is initiated 
 </dd>
 
         <dt id="PaymentResponse">
@@ -120,7 +131,7 @@
 
 </dt>
 <dd>
-   
+  Describes a payment response. 
 </dd>
 
         <dt id="RetryHandler">
@@ -128,7 +139,7 @@
 
 </dt>
 <dd>
-   
+  RetryHandler describes the interfaces of a retry handler. 
 </dd>
 
         <dt id="TokenizedResponse">
@@ -136,7 +147,7 @@
 
 </dt>
 <dd>
-   
+  Describes a response from tokenize. 
 </dd>
 
       </dl>
@@ -156,7 +167,7 @@
 
 </dt>
 <dd>
-   
+  TokenizeTypes describe the options for tokenizing card number and code 
 </dd>
 
       </dl>
@@ -172,7 +183,8 @@
 
 </dt>
 <dd>
-   
+  RetryException is used for throwing an exception
+when retry count is reached. 
 </dd>
 
       </dl>
@@ -208,6 +220,7 @@
   <li><a href="../paylike_dart_client/DefaultRetryHandler-class.html">DefaultRetryHandler</a></li>
   <li><a href="../paylike_dart_client/HintsResponse-class.html">HintsResponse</a></li>
   <li><a href="../paylike_dart_client/PaylikeClient-class.html">PaylikeClient</a></li>
+  <li><a href="../paylike_dart_client/PaylikeClientResponse-class.html">PaylikeClientResponse</a></li>
   <li><a href="../paylike_dart_client/PaylikeHosts-class.html">PaylikeHosts</a></li>
   <li><a href="../paylike_dart_client/PaylikeRequestBuilder-class.html">PaylikeRequestBuilder</a></li>
   <li><a href="../paylike_dart_client/PaylikeTransaction-class.html">PaylikeTransaction</a></li>
@@ -236,7 +249,7 @@
 <footer>
   <span class="no-break">
     paylike_dart_client
-      1.0.0
+      1.0.6
   </span>
 
   

@@ -50,6 +50,9 @@
 </h1></div>
 
     
+<section class="desc markdown">
+  <p>Handles high level requests towards the paylike ecosystem</p>
+</section>
 
 
 
@@ -58,10 +61,16 @@
 
       <dl class="constructor-summary-list">
         <dt id="PaylikeClient" class="callable">
-          <span class="name"><a href="../paylike_dart_client/PaylikeClient/PaylikeClient.html">PaylikeClient</a></span><span class="signature">(<span class="parameter" id="-param-clientId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">clientId</span></span>)</span>
+          <span class="name"><a href="../paylike_dart_client/PaylikeClient/PaylikeClient.html">PaylikeClient</a></span><span class="signature">()</span>
         </dt>
         <dd>
            
+        </dd>
+        <dt id="PaylikeClient.withSpecificClientId" class="callable">
+          <span class="name"><a href="../paylike_dart_client/PaylikeClient/PaylikeClient.withSpecificClientId.html">PaylikeClient.withSpecificClientId</a></span><span class="signature">(<span class="parameter" id="withSpecificClientId-param-clientId"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span> <span class="parameter-name">clientId</span></span>)</span>
+        </dt>
+        <dd>
+          For testing purposes 
         </dd>
       </dl>
     </section>
@@ -76,7 +85,7 @@
 
 </dt>
 <dd>
-   
+  SDK Client ID used while making requests <a href="../paylike_dart_client/PaylikeClient/clientId.html">[...]</a>
   <div class="features">read / write</div>
 
 </dd>
@@ -98,7 +107,7 @@
 
 </dt>
 <dd>
-   
+  Host APIs 
   <div class="features">read / write</div>
 
 </dd>
@@ -109,18 +118,18 @@
 
 </dt>
 <dd>
-   
+  Logger function 
   <div class="features">read / write</div>
 
 </dd>
 
         <dt id="requester" class="property">
   <span class="name"><a href="../paylike_dart_client/PaylikeClient/requester.html">requester</a></span>
-  <span class="signature">&#8596; <a href="https://pub.dev/documentation/paylike_dart_request/1.0.7/paylike_dart_request/PaylikeRequester-class.html">PaylikeRequester</a></span> 
+  <span class="signature">&#8596; <a href="https://pub.dev/documentation/paylike_dart_request/1.0.9/paylike_dart_request/PaylikeRequester-class.html">PaylikeRequester</a></span> 
 
 </dt>
 <dd>
-   
+  Underlying implementation to do requests 
   <div class="features">read / write</div>
 
 </dd>
@@ -142,7 +151,7 @@
 
 </dt>
 <dd>
-   
+  Timeout to use while making requests 
   <div class="features">read / write</div>
 
 </dd>
@@ -167,14 +176,15 @@
 </dd>
 
         <dt id="paymentCreate" class="callable">
-  <span class="name"><a href="../paylike_dart_client/PaylikeClient/paymentCreate.html">paymentCreate</a></span><span class="signature">(<wbr><span class="parameter" id="paymentCreate-param-payment"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">payment</span></span>)
-    <span class="returntype parameter">&#8594; <a href="../paylike_dart_client/PaylikeRequestBuilder-class.html">PaylikeRequestBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../paylike_dart_client/PaymentResponse-class.html">PaymentResponse</a></span>&gt;</span></span>
+  <span class="name"><a href="../paylike_dart_client/PaylikeClient/paymentCreate.html">paymentCreate</a></span><span class="signature">(<wbr><span class="parameter" id="paymentCreate-param-payment">{<span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/Map-class.html">Map</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>, <span class="type-parameter">dynamic</span>&gt;</span></span> <span class="parameter-name">payment</span>, </span><span class="parameter" id="paymentCreate-param-hints"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/List-class.html">List</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/String-class.html">String</a></span>&gt;</span></span> <span class="parameter-name">hints</span> = <span class="default-value">const []</span>}</span>)
+    <span class="returntype parameter">&#8594; <a href="../paylike_dart_client/PaylikeRequestBuilder-class.html">PaylikeRequestBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="../paylike_dart_client/PaylikeClientResponse-class.html">PaylikeClientResponse</a></span>&gt;</span></span>
   </span>
   
 
 </dt>
 <dd>
-   
+  Payment create calls the capture API
+with retry mechanism used 
   
 
 </dd>
@@ -187,7 +197,7 @@
 
 </dt>
 <dd>
-   
+  Overrides hosts. 
   
 
 </dd>
@@ -200,20 +210,20 @@
 
 </dt>
 <dd>
-   
+  Overrides the used logger. 
   
 
 </dd>
 
         <dt id="setRequester" class="callable">
-  <span class="name"><a href="../paylike_dart_client/PaylikeClient/setRequester.html">setRequester</a></span><span class="signature">(<wbr><span class="parameter" id="setRequester-param-requester"><span class="type-annotation"><a href="https://pub.dev/documentation/paylike_dart_request/1.0.7/paylike_dart_request/PaylikeRequester-class.html">PaylikeRequester</a></span> <span class="parameter-name">requester</span></span>)
+  <span class="name"><a href="../paylike_dart_client/PaylikeClient/setRequester.html">setRequester</a></span><span class="signature">(<wbr><span class="parameter" id="setRequester-param-requester"><span class="type-annotation"><a href="https://pub.dev/documentation/paylike_dart_request/1.0.9/paylike_dart_request/PaylikeRequester-class.html">PaylikeRequester</a></span> <span class="parameter-name">requester</span></span>)
     <span class="returntype parameter">&#8594; <a href="../paylike_dart_client/PaylikeClient-class.html">PaylikeClient</a></span>
   </span>
   
 
 </dt>
 <dd>
-   
+  Overrides the used requester. 
   
 
 </dd>
@@ -226,7 +236,7 @@
 
 </dt>
 <dd>
-   
+  Overrides the timeout settings. 
   
 
 </dd>
@@ -239,7 +249,8 @@
 
 </dt>
 <dd>
-   
+  Tokenize is used to acquire tokens from the vault
+with retry mechanism used. 
   
 
 </dd>
@@ -304,6 +315,7 @@
   <li><a href="../paylike_dart_client/DefaultRetryHandler-class.html">DefaultRetryHandler</a></li>
   <li><a href="../paylike_dart_client/HintsResponse-class.html">HintsResponse</a></li>
   <li><a href="../paylike_dart_client/PaylikeClient-class.html">PaylikeClient</a></li>
+  <li><a href="../paylike_dart_client/PaylikeClientResponse-class.html">PaylikeClientResponse</a></li>
   <li><a href="../paylike_dart_client/PaylikeHosts-class.html">PaylikeHosts</a></li>
   <li><a href="../paylike_dart_client/PaylikeRequestBuilder-class.html">PaylikeRequestBuilder</a></li>
   <li><a href="../paylike_dart_client/PaylikeTransaction-class.html">PaylikeTransaction</a></li>
@@ -332,6 +344,7 @@
 
     <li class="section-title"><a href="../paylike_dart_client/PaylikeClient-class.html#constructors">Constructors</a></li>
     <li><a href="../paylike_dart_client/PaylikeClient/PaylikeClient.html">PaylikeClient</a></li>
+    <li><a href="../paylike_dart_client/PaylikeClient/PaylikeClient.withSpecificClientId.html">withSpecificClientId</a></li>
 
 
     <li class="section-title">
@@ -370,7 +383,7 @@
 <footer>
   <span class="no-break">
     paylike_dart_client
-      1.0.0
+      1.0.6
   </span>
 
   

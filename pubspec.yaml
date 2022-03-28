@@ -1,6 +1,6 @@
 name: paylike_dart_client
 description: Higher level API client for Paylike.io
-version: 1.0.5
+version: 1.0.6
 homepage: https://paylike.io
 environment:
   sdk: '>=2.12.0 <3.0.0'

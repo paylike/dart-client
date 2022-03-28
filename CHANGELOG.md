@@ -1,3 +1,7 @@
+## 1.0.6
+
+- Fixed issues with interface documentation
+
 ## 1.0.5
 
 - Fixed an issue with default constructor not allowing empty client ID

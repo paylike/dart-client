@@ -56,11 +56,16 @@
 
         </section>
         
+<section class="desc markdown">
+  <p>Logger function</p>
+</section>
 
         
 <section class="summary source-code" id="source">
   <h2><span>Implementation</span></h2>
-  <pre class="language-dart"><code class="language-dart">Function log = (dynamic o) =&gt; print(o);
+  <pre class="language-dart"><code class="language-dart">Function log = (dynamic o) =&gt; print(&#39;&#39;&#39;
+${jsonEncode(o)}
+&#39;&#39;&#39;);
 
 </code></pre>
 </section>
@@ -88,6 +93,7 @@
 
     <li class="section-title"><a href="../../paylike_dart_client/PaylikeClient-class.html#constructors">Constructors</a></li>
     <li><a href="../../paylike_dart_client/PaylikeClient/PaylikeClient.html">PaylikeClient</a></li>
+    <li><a href="../../paylike_dart_client/PaylikeClient/PaylikeClient.withSpecificClientId.html">withSpecificClientId</a></li>
 
 
     <li class="section-title">
@@ -129,7 +135,7 @@
 <footer>
   <span class="no-break">
     paylike_dart_client
-      1.0.0
+      1.0.6
   </span>
 
   

@@ -60,8 +60,8 @@ hood.</p>
 void main() {
   var client = PaylikeClient('MY_CLIENT_ID');
 
-  Future&lt;TokenizedResponse&gt; request = client.tokenize(TokenizeTypes.PCN, '1000000000000000');
-  request.then((response) {
+  PaylikeRequestBuilder&lt;TokenizedResponse&gt; request = client.tokenize(TokenizeTypes.PCN, '1000000000000000');
+  request.execute().then((response) {
     print('Received token: ' + response.token);
   }).catchError((e) =&gt; print(e));
 }
@@ -70,14 +70,13 @@ void main() {
 <h2 id="methods">Methods</h2>
 <pre class="language-dart"><code class="language-dart">// client.tokenize(TokenizeTypes.PCN, '...');
 // client.tokenize(TokenizeTypes.PCSC, '...');
-Future&lt;TokenizedResponse&gt; tokenize(TokenizeTypes type, String value)
+PaylikeRequestBuilder&lt;TokenizedResponse&gt; tokenize(TokenizeTypes type, String value);
 
-// client.paymentCreate(payment, [], null);
-Future&lt;PaymentResponse&gt; paymenCreate(
-      Map&lt;String, dynamic&gt; payment,
-      List&lt;String&gt; hints,
-      String? challengePath
-)
+// client.paymentCreate(payment);
+PaylikeRequestBuilder&lt;PaymentResponse&gt; paymenCreate({
+  required Map&lt;String, dynamic&gt; payment,
+  List&lt;String&gt; hints = const [],
+});
 </code></pre>
 <p><a href="https://github.com/paylike/api-reference/blob/main/payments/index.md">More information</a> on payment data structure.</p>
 <h2 id="error-handling">Error handling</h2>
@@ -113,22 +112,55 @@ logging.</p>
 </code></pre>
 <h2 id="timeouts-and-retries">Timeouts and retries</h2>
 <p>There is a default timeout for all HTTPS requests of 10 seconds and a retry
-strategy of 10 retries with increasing delay (check the source for details). The
-default maximum timeout (retries and timeouts accumulated) is 72,100
-milliseconds.</p>
-<p>Both of these parameters can be customized:</p>
-<pre class="language-js"><code class="language-js">const server = require('@paylike/client')({
-  timeout: 10000,
-  retryAfter: (err, attempts) =&gt; {
-    // err = current error
-    // attempts = total attempts so far
-    return false // no more attempts (err will be returned to the client)
-    // or
-    return 1000 // retry after this many milliseconds
-  },
-})
+strategy of 10 retries with increasing delay.</p>
+<pre class="language-dart"><code class="language-dart">      switch (attempts) {
+        case 0:
+        case 1:
+          usedDuration = Duration(milliseconds: 0);
+          break;
+        case 2:
+          usedDuration = Duration(milliseconds: 100);
+          break;
+        case 3:
+          usedDuration = Duration(seconds: 2);
+          break;
+        default:
+          usedDuration = Duration(seconds: 10);
+      }
 </code></pre>
-<p>Both options can be set on the factory or the individual method.</p>
+<p>Using the default retry handler is recommended which you can do by specifying on the <code>PaylikeRequestBuilder</code> you receive:</p>
+<pre class="language-dart"><code class="language-dart">      var request = client
+          .tokenize(TokenizeTypes.PCN, '4100000000000000')
+          .withDefaultRetry();
+      var response = await request.execute();
+</code></pre>
+<p>You can also create your own handler by implementing the RetryHandler abstract class:</p>
+<pre class="language-dart"><code class="language-dart">class CustomRetryHandler&lt;T&gt; implements RetryHandler&lt;T&gt; {
+  int attempts = 0;
+  @override
+  Future&lt;T&gt; retry(Future&lt;T&gt; Function() executor) async {
+    try {
+      var res = await executor();
+      return res;
+    } on RateLimitException catch (e) {
+      attempts++;
+      if (attempts &gt; 10) {
+        rethrow;
+      }
+      await Future.delayed(Duration(seconds: 5));
+    } catch (e) {
+      rethrow;
+    }
+    return retry(executor);
+  }
+}
+
+// Then you can apply your own retry handler to the request builder:
+var request = client
+      .tokenize(TokenizeTypes.PCN, '4100000000000000')
+      .withRetry(CustomRetryHandler&lt;TokenizedResponse&gt;());
+var response = await request.execute();
+</code></pre>
 </section>
 
 
@@ -139,7 +171,8 @@ milliseconds.</p>
   <span class="name"><a href="paylike_dart_client/paylike_dart_client-library.html">paylike_dart_client</a></span> 
 
 </dt>
-<dd>Support for doing something awesome. <a href="paylike_dart_client/paylike_dart_client-library.html">[...]</a>
+<dd>Responsible for handling high level communication towards
+the paylike API 
 </dd>
 
         </dl>
@@ -175,7 +208,7 @@ milliseconds.</p>
 <footer>
   <span class="no-break">
     paylike_dart_client
-      1.0.0
+      1.0.6
   </span>
 
   

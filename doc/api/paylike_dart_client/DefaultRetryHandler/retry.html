@@ -66,6 +66,9 @@
 
     </section>
     
+<section class="desc markdown">
+  <p>Implementation of the retry mechanism.</p>
+</section>
 
 
     
@@ -82,10 +85,16 @@ Future&lt;T&gt; retry(Future&lt;T&gt; Function() executor) async {
       rethrow;
     }
     await Future.delayed(getRetryAfter(e.retryAfter));
+    return retry(executor);
+  } on TimeoutException catch (e) {
+    attempts++;
+    if (attempts &gt; 2) {
+      rethrow;
+    }
+    return retry(executor);
   } catch (e) {
     rethrow;
   }
-  return retry(executor);
 }</code></pre>
 </section>
 
@@ -145,7 +154,7 @@ Future&lt;T&gt; retry(Future&lt;T&gt; Function() executor) async {
 <footer>
   <span class="no-break">
     paylike_dart_client
-      1.0.0
+      1.0.6
   </span>
 
   
