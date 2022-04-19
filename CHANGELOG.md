@@ -1,3 +1,7 @@
+## 1.0.7
+
+- Fixed an issue with PaylikeException not being exported from `paylike_dart_request`
+
 ## 1.0.6
 
 - Fixed issues with interface documentation
