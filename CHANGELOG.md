@@ -1,3 +1,7 @@
+## 1.0.8
+
+- Added option to access Apple Pay
+
 ## 1.0.7
 
 - Fixed an issue with PaylikeException not being exported from `paylike_dart_request`

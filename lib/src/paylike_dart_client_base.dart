@@ -17,6 +17,7 @@ class RetryException implements Exception {
 class PaylikeHosts {
   String api = 'https://b.paylike.io';
   String vault = 'https://vault.paylike.io';
+  String applePayAPI = 'https://aplepay.paylike.io/token';
   PaylikeHosts();
 
   /// Creates a new PaylikeHosts from two given URLs.
@@ -263,8 +264,12 @@ class PaylikeClient {
   /// with retry mechanism used.
   PaylikeRequestBuilder<TokenizedResponse> tokenize(
       TokenizeTypes type, String value) {
-    return PaylikeRequestBuilder<TokenizedResponse>(
-        () => _tokenize(type, value));
+    return PaylikeRequestBuilder(() => _tokenize(type, value));
+  }
+
+  /// Used for the tokenization of a token acquired during apple payment flow
+  PaylikeRequestBuilder<TokenizedResponse> tokenizeApple(String value) {
+    return PaylikeRequestBuilder(() => _tokenizeApple(value));
   }
 
   /// Used to acquire tokens from the vault.
@@ -277,6 +282,19 @@ class PaylikeClient {
         .setVersion(1)
         .setTimeout(timeout);
     var response = await requester.request(hosts.vault, opts);
+    var body = await response.getBody();
+    return TokenizedResponse.fromJSON(jsonDecode(body));
+  }
+
+  /// Used to acquire tokens for apple pay
+  Future<TokenizedResponse> _tokenizeApple(String value) async {
+    var opts = RequestOptions.fromClientId(clientId)
+        .setData({
+          'token': value,
+        })
+        .setVersion(1)
+        .setTimeout(timeout);
+    var response = await requester.request(hosts.applePayAPI, opts);
     var body = await response.getBody();
     return TokenizedResponse.fromJSON(jsonDecode(body));
   }
