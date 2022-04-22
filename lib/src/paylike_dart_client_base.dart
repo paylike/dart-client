@@ -17,7 +17,7 @@ class RetryException implements Exception {
 class PaylikeHosts {
   String api = 'https://b.paylike.io';
   String vault = 'https://vault.paylike.io';
-  String applePayAPI = 'https://aplepay.paylike.io/token';
+  String applePayAPI = 'https://applepay.paylike.io/token';
   PaylikeHosts();
 
   /// Creates a new PaylikeHosts from two given URLs.

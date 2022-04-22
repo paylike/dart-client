@@ -1,3 +1,7 @@
+## 1.0.9
+
+- Fixed a typo in the previous release
+
 ## 1.0.8
 
 - Added option to access Apple Pay
