@@ -59,23 +59,6 @@ the paylike API</p>
       <h2>Classes</h2>
 
       <dl>
-        <dt id="DefaultRetryHandler">
-  <span class="name "><a href="../paylike_dart_client/DefaultRetryHandler-class.html">DefaultRetryHandler</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  DefaultRetryHandler is used as the default retry backoff
-mechanism for handling RateLimitExceptions. 
-</dd>
-
-        <dt id="HintsResponse">
-  <span class="name "><a href="../paylike_dart_client/HintsResponse-class.html">HintsResponse</a></span> 
-
-</dt>
-<dd>
-  Describes the hints array received after executing a challenge successfully. 
-</dd>
-
         <dt id="PaylikeClient">
   <span class="name "><a href="../paylike_dart_client/PaylikeClient-class.html">PaylikeClient</a></span> 
 
@@ -84,70 +67,12 @@ mechanism for handling RateLimitExceptions.
   Handles high level requests towards the paylike ecosystem 
 </dd>
 
-        <dt id="PaylikeClientResponse">
-  <span class="name "><a href="../paylike_dart_client/PaylikeClientResponse-class.html">PaylikeClientResponse</a></span> 
-
-</dt>
-<dd>
-  Describes the client response from the Paylike capture API 
-</dd>
-
         <dt id="PaylikeHosts">
   <span class="name "><a href="../paylike_dart_client/PaylikeHosts-class.html">PaylikeHosts</a></span> 
 
 </dt>
 <dd>
   Describes endpoints used. 
-</dd>
-
-        <dt id="PaylikeRequestBuilder">
-  <span class="name "><a href="../paylike_dart_client/PaylikeRequestBuilder-class.html">PaylikeRequestBuilder</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  PaylikeRequestBuilder provides a flexible way to add
-custom retry mechanism into the flow. 
-</dd>
-
-        <dt id="PaylikeTransaction">
-  <span class="name "><a href="../paylike_dart_client/PaylikeTransaction-class.html">PaylikeTransaction</a></span> 
-
-</dt>
-<dd>
-  Describes a paylike transaction. 
-</dd>
-
-        <dt id="PaymentChallenge">
-  <span class="name "><a href="../paylike_dart_client/PaymentChallenge-class.html">PaymentChallenge</a></span> 
-
-</dt>
-<dd>
-  PaymentChallenge describes a challenge after a payment creation
-is initiated 
-</dd>
-
-        <dt id="PaymentResponse">
-  <span class="name "><a href="../paylike_dart_client/PaymentResponse-class.html">PaymentResponse</a></span> 
-
-</dt>
-<dd>
-  Describes a payment response. 
-</dd>
-
-        <dt id="RetryHandler">
-  <span class="name "><a href="../paylike_dart_client/RetryHandler-class.html">RetryHandler</a><span class="signature">&lt;<wbr><span class="type-parameter">T</span>&gt;</span></span> 
-
-</dt>
-<dd>
-  RetryHandler describes the interfaces of a retry handler. 
-</dd>
-
-        <dt id="TokenizedResponse">
-  <span class="name "><a href="../paylike_dart_client/TokenizedResponse-class.html">TokenizedResponse</a></span> 
-
-</dt>
-<dd>
-  Describes a response from tokenize. 
 </dd>
 
       </dl>
@@ -174,21 +99,6 @@ is initiated
     </section>
 
 
-    <section class="summary offset-anchor" id="exceptions">
-      <h2>Exceptions / Errors</h2>
-
-      <dl>
-        <dt id="RetryException">
-  <span class="name "><a href="../paylike_dart_client/RetryException-class.html">RetryException</a></span> 
-
-</dt>
-<dd>
-  RetryException is used for throwing an exception
-when retry count is reached. 
-</dd>
-
-      </dl>
-    </section>
 
   </div> <!-- /.main-content -->
 
@@ -209,6 +119,8 @@ when retry count is reached.
     <ol>
       <li class="section-title">Libraries</li>
       <li><a href="../paylike_dart_client/paylike_dart_client-library.html">paylike_dart_client</a></li>
+      <li><a href="../paylike_dart_client_dtos/paylike_dart_client_dtos-library.html">paylike_dart_client_dtos</a></li>
+      <li><a href="../paylike_dart_client_exceptions/paylike_dart_client_exceptions-library.html">paylike_dart_client_exceptions</a></li>
 </ol>
 
   </div>
@@ -217,17 +129,8 @@ when retry count is reached.
     <h5>paylike_dart_client library</h5>
     <ol>
   <li class="section-title"><a href="../paylike_dart_client/paylike_dart_client-library.html#classes">Classes</a></li>
-  <li><a href="../paylike_dart_client/DefaultRetryHandler-class.html">DefaultRetryHandler</a></li>
-  <li><a href="../paylike_dart_client/HintsResponse-class.html">HintsResponse</a></li>
   <li><a href="../paylike_dart_client/PaylikeClient-class.html">PaylikeClient</a></li>
-  <li><a href="../paylike_dart_client/PaylikeClientResponse-class.html">PaylikeClientResponse</a></li>
   <li><a href="../paylike_dart_client/PaylikeHosts-class.html">PaylikeHosts</a></li>
-  <li><a href="../paylike_dart_client/PaylikeRequestBuilder-class.html">PaylikeRequestBuilder</a></li>
-  <li><a href="../paylike_dart_client/PaylikeTransaction-class.html">PaylikeTransaction</a></li>
-  <li><a href="../paylike_dart_client/PaymentChallenge-class.html">PaymentChallenge</a></li>
-  <li><a href="../paylike_dart_client/PaymentResponse-class.html">PaymentResponse</a></li>
-  <li><a href="../paylike_dart_client/RetryHandler-class.html">RetryHandler</a></li>
-  <li><a href="../paylike_dart_client/TokenizedResponse-class.html">TokenizedResponse</a></li>
 
 
 
@@ -238,8 +141,6 @@ when retry count is reached.
   <li><a href="../paylike_dart_client/TokenizeTypes.html">TokenizeTypes</a></li>
 
 
-  <li class="section-title"><a href="../paylike_dart_client/paylike_dart_client-library.html#exceptions">Exceptions</a></li>
-  <li><a href="../paylike_dart_client/RetryException-class.html">RetryException</a></li>
 </ol>
 
   </div><!--/sidebar-offcanvas-right-->
@@ -249,7 +150,7 @@ when retry count is reached.
 <footer>
   <span class="no-break">
     paylike_dart_client
-      1.0.6
+      1.0.9
   </span>
 
   

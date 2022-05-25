@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:paylike_dart_client/paylike_dart_client.dart';
+import 'package:paylike_dart_client/src/dto.dart';
+import 'package:paylike_dart_client/src/request.dart';
 import 'package:paylike_dart_request/paylike_dart_request.dart';
 import 'package:test/test.dart';
 

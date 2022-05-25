@@ -1,3 +1,7 @@
+## 1.0.10
+
+- Refactored codebase to allow exports to work modularly
+
 ## 1.0.9
 
 - Fixed a typo in the previous release
